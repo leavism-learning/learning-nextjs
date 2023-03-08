@@ -2,10 +2,11 @@ import Head from 'next/head';
 import Image from 'next/image';
 import { auth, Providers } from '../../lib/firebase';
 import { signInWithPopup } from 'firebase/auth';
+import { useContext } from 'react';
+import { UserContext } from 'lib/context';
 
 export default function EnterPage({}) {
-    const user = null;
-    const username = null;
+    const { user, username } = useContext(UserContext);
 
     return (
         <>
