@@ -1,4 +1,5 @@
 import Head from 'next/head';
+import Image from 'next/image';
 import styles from '@/styles/Home.module.css'
 import { auth, Providers } from '../../lib/firebase';
 import { signInWithPopup } from 'firebase/auth';
@@ -24,15 +25,6 @@ export default function EnterPage({}) {
             </main>
         </>
     )
-    // return (
-    //     <main>
-    //       {user ? 
-    //         !username ? <UsernameForm /> : <SignOutButton /> 
-    //         : 
-    //         <SignInButton />
-    //       }
-    //     </main>
-    //   );
 }
 
 function SignInButton() {
@@ -42,7 +34,11 @@ function SignInButton() {
 
     return (
         <button className="btn-google" onClick={signInWithGoogle}>
-          <img src="/google.png"></img>Sign in with Google
+          <Image
+            src="/google.png"
+            alt="Google logo"
+            width={30} height={30}
+          /> Sign in with Google
         </button>
     );
 }
