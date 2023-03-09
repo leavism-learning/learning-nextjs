@@ -2,6 +2,7 @@ import Head from 'next/head';
 import Image from 'next/image';
 
 import { useCallback, useContext, useEffect, useState } from 'react';
+import { toast } from 'react-hot-toast';
 import debounce from 'lodash.debounce';
 
 import { auth, firestore, Providers } from '../../lib/firebase';
@@ -9,8 +10,9 @@ import { UserContext } from 'lib/context';
 
 import { signInWithPopup } from 'firebase/auth';
 import { doc, DocumentReference, getDoc, WriteBatch, writeBatch } from 'firebase/firestore';
+import { redirect } from 'next/dist/server/api-utils';
 
-export default function EnterPage(props) {
+export default function Enter(props) {
     const { user, username } = useContext(UserContext);
 
     return (
@@ -59,6 +61,29 @@ function UsernameForm(): JSX.Element {
 
     const { user, username } = useContext(UserContext);
 
+    async function onSubmit(event: { preventDefault: () => void; }): Promise<void> {
+        event.preventDefault();
+
+        const userReference: DocumentReference = doc(firestore, 'users', user!.uid);
+        const usernameReference: DocumentReference = doc(firestore, 'username', formValue);
+
+        const batch: WriteBatch = writeBatch(firestore);
+        batch.set(userReference, {
+            username: formValue,
+            photoURL: user!.photoURL,
+            displayName: user!.displayName,
+        });
+        batch.set(usernameReference, { uid: user!.uid});
+
+        const committed: Promise<void> = batch.commit();
+
+        toast.promise(committed, {
+            loading: 'Creating account...',
+            success: 'Nice!',
+            error: 'Something went wrong 😭'
+        });
+    }
+
     function onChange(event: { target: { value: string; }; }): void {
         const usernameValue: string = event.target.value.toLowerCase();
         const usernameRegex: RegExp = /^(?=[a-zA-Z0-9._]{3,15}$)(?!.*[_.]{2})[^_.].*[^_.]$/;
@@ -74,23 +99,6 @@ function UsernameForm(): JSX.Element {
             setLoading(true);
             setIsValid(false);
         }
-    }
-
-    async function onSubmit(event: { preventDefault: () => void; }): Promise<void> {
-        event.preventDefault();
-
-        const userReference: DocumentReference = doc(firestore, 'users', user!.uid);
-        const usernameReference: DocumentReference = doc(firestore, 'username', formValue);
-
-        const batch: WriteBatch = writeBatch(firestore);
-        batch.set(userReference, {
-            username: formValue,
-            photoURL: user!.photoURL,
-            displayName: user!.displayName,
-        });
-        batch.set(usernameReference, { uid: user!.uid});
-
-        await batch.commit();
     }
 
     const checkUsername = useCallback(
