@@ -10,9 +10,8 @@ import { UserContext } from 'lib/context';
 
 import { signInWithPopup } from 'firebase/auth';
 import { doc, DocumentReference, getDoc, WriteBatch, writeBatch } from 'firebase/firestore';
-import { redirect } from 'next/dist/server/api-utils';
 
-export default function Enter(props) {
+export default function Enter(_props: any) {
     const { user, username } = useContext(UserContext);
 
     return (
@@ -72,6 +71,7 @@ function UsernameForm(): JSX.Element {
             username: formValue,
             photoURL: user!.photoURL,
             displayName: user!.displayName,
+            uid: user!.uid,
         });
         batch.set(usernameReference, { uid: user!.uid});
 
