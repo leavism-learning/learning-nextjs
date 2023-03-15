@@ -5,7 +5,8 @@ import { collection, CollectionReference, getDocs, limit, orderBy, query, where 
 
 export async function getServerSideProps(serverQuery) {
     const { username } = serverQuery.query ;
-    const userDocument = getUserWithUsername(username);
+    const userDocument = await getUserWithUsername(username);
+    if (!userDocument) return { notFound: true, }
 
      let user = null;
      let posts = null;
