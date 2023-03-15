@@ -22,9 +22,9 @@ export async function getStaticProps({ params }: { params: { username: string, s
 }
 
 export async function getStaticPaths() {
-    const snapshot = await collectionGroup(firestore, 'posts');
+    const postQuery = await collectionGroup(firestore, 'posts');
 
-    const paths = (await getDocs(snapshot)).docs.map((doc) => {
+    const paths = (await getDocs(postQuery)).docs.map((doc) => {
         const { slug, username } = doc.data();
         return {
             params: { username, slug },
@@ -38,7 +38,7 @@ export async function getStaticPaths() {
 }
 
 
-export default function Post(props) {
+export default function Post(props: { path: string; post: any; }) {
     const postRef = doc(firestore, props.path);
     const [realtimePost] = useDocumentData(postRef);
 
