@@ -2,7 +2,7 @@ import styles from '../../styles/Admin.module.css';
 import AuthCheck from "components/AuthCheck";
 import { auth, firestore } from "lib/firebase";
 
-import { doc, serverTimestamp, updateDoc } from 'firebase/firestore';
+import { doc, DocumentData, DocumentReference, serverTimestamp, updateDoc } from 'firebase/firestore';
 import { useDocumentData } from "react-firebase-hooks/firestore";
 
 import { useRouter } from "next/router";
@@ -41,7 +41,7 @@ function PostManager() {
                 <h1>{post.title}</h1>
                 <p>ID: {post.slug}</p>
     
-                <PostForm postRef={postReference} defaultValues={post} preview={preview} />
+                <PostForm postReference={postReference} defaultValues={post} preview={preview} />
               </section>
     
               <aside>
@@ -57,10 +57,11 @@ function PostManager() {
       );
 }
 
-function PostForm({ defaultValues, postReference, preview }) {
+function PostForm({ defaultValues, postReference, preview }: { defaultValues: any, postReference: DocumentReference<DocumentData>, preview: any }) {
     const { register, handleSubmit, reset, watch } = useForm({ defaultValues, mode: 'onChange'});
 
-    const updatePost = async ({ content, published }) => {
+    console.log(postReference);
+    const updatePost = async ({ content, published }: { content: string, published: boolean}) => {
         await updateDoc(postReference, {
           content,
           published,
