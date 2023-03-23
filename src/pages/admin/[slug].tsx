@@ -2,7 +2,7 @@ import styles from '../../styles/Admin.module.css';
 import AuthCheck from "components/AuthCheck";
 import { auth, firestore } from "lib/firebase";
 
-import { doc, serverTimestamp } from 'firebase/firestore';
+import { doc, serverTimestamp, updateDoc } from 'firebase/firestore';
 import { useDocumentData } from "react-firebase-hooks/firestore";
 
 import { useRouter } from "next/router";
@@ -61,10 +61,10 @@ function PostForm({ defaultValues, postReference, preview }) {
     const { register, handleSubmit, reset, watch } = useForm({ defaultValues, mode: 'onChange'});
 
     const updatePost = async ({ content, published }) => {
-        await postReference.update({
-            content,
-            published,
-            updatedAt: serverTimestamp(),
+        await updateDoc(postReference, {
+          content,
+          published,
+          updatedAt: serverTimestamp(),
         });
 
         reset({ content, published });
