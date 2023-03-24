@@ -2,7 +2,7 @@ import styles from '../../styles/Admin.module.css';
 
 import AuthCheck from 'components/AuthCheck';
 import PostFeed from 'components/PostFeed';
-import { collection, doc, getDocs, orderBy, query, serverTimestamp, writeBatch } from 'firebase/firestore';
+import { collection, doc, orderBy, query, serverTimestamp, writeBatch } from 'firebase/firestore';
 import { UserContext } from 'lib/context';
 import { auth, firestore } from 'lib/firebase';
 import { useRouter } from 'next/router';
@@ -50,7 +50,7 @@ function CreateNewPost() {
     event.preventDefault();
     
     const uid = auth.currentUser!.uid;
-    const postReference = doc(firestore, 'users', auth.currentUser!.uid, 'posts', slug);
+    const postReference = doc(firestore, 'users', uid, 'posts', slug);
 
     const data = {
       title,
