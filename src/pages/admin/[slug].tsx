@@ -60,7 +60,6 @@ function PostManager() {
 function PostForm({ defaultValues, postReference, preview }: { defaultValues: any, postReference: DocumentReference<DocumentData>, preview: any }) {
     const { register, handleSubmit, reset, watch } = useForm({ defaultValues, mode: 'onChange'});
 
-    console.log(postReference);
     const updatePost = async ({ content, published }: { content: string, published: boolean}) => {
         await updateDoc(postReference, {
           content,
